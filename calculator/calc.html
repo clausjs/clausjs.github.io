@@ -1,0 +1,136 @@
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Joseph Claus - Calculator</title>
+        <!-- Favicon-->
+        <!-- <link rel="icon" type="image/x-icon" href="assets/favicon.ico" /> -->
+        <!-- Font Awesome icons (free version)-->
+        <script src="https://use.fontawesome.com/releases/v6.2.1/js/all.js" crossorigin="anonymous"></script>
+        <!-- Google fonts-->
+        <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css" />
+        <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="./calc.css" rel="stylesheet" />
+    </head>
+    <style>
+        @font-face {
+            font-family: "Calculator";
+            src: url("../assets/fonts/Calculator.ttf");
+        }
+    </style>
+    <body>
+        <div class="calculator">
+            <div id="output" class="screen-output">0</div>
+            <div class="buttons-layout">
+                <div class="num-column">
+                    <button onclick="addToScreen(this)">7</button>
+                    <button onclick="addToScreen(this)">4</button>
+                    <button onclick="addToScreen(this)">1</button>
+                    <button class="long" onclick="addToScreen(this)">0</button>
+                </div>
+                <div class="num-column no-bottom-row">
+                    <button onclick="addToScreen(this)">8</button>
+                    <button onclick="addToScreen(this)">5</button>
+                    <button onclick="addToScreen(this)">2</button>
+                </div>
+                <div class="num-column">
+                    <button onclick="addToScreen(this)">9</button>
+                    <button onclick="addToScreen(this)">6</button>
+                    <button onclick="addToScreen(this)">3</button>
+                    <button onclick="addToScreen(this)">.</button>
+                </div>
+                <div class="func-column">
+                    <button onclick="setFunc(this)">-</button>
+                    <button onclick="setFunc(this)">+</button>
+                    <button onclick="setFunc(this)">*</button>
+                    <button onclick="setFunc(this)">/</button>
+                    <button onclick="calculate()">=</button>
+                    <button onclick="memoryClear()">MC</button>
+                </div>
+            </div>
+        </div>
+    </body>
+    <script>
+        let memory = 0, func = "";
+        let functionChanged = false;
+
+        function addToScreen(e) {
+            const value = e.innerHTML;
+            const element = document.getElementById('output');
+
+            let newValue;
+            if (functionChanged) {
+                functionChanged = false;
+                newValue = value;
+            } else newValue = element.innerHTML === "0" ? value : element.innerHTML + value;
+
+            element.innerHTML = newValue;
+        }
+
+        function setFunc(e) {
+            const tempFunc = e.innerHTML;
+
+            const element = document.getElementById('output');
+            memory = element.innerHTML;
+            functionChanged = true;
+
+            switch (tempFunc) {
+                case "-":
+                    func = "subtract";
+                    break;
+                case "+":
+                    func = "add";
+                    break;
+                case "*":
+                    func = "multiply";
+                    break;
+                case "/":
+                    func = "divide";
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        function calculate() {
+            const element = document.getElementById('output');
+
+            let value = Number(element.innerHTML);
+            if (memory !== 0 && func !== "") {
+                switch (func) {
+                    case "subtract":
+                        value = Number(memory) - value;
+                        break;
+                    case "add":
+                        value = Number(memory) + value;
+                        break;
+                    case "multiply":
+                        value = Number(memory) * value;
+                        break;
+                    case "divide":
+                        value = Number(memory) / value;
+                        break;
+                    default:
+                        break;
+                }
+
+                const result = Number(value);
+                if (result % 1 === 0) element.innerHTML = result;
+                else element.innerHTML = Number(result.toFixed(10));
+
+                functionChanged = true;
+            }
+        }
+
+        function memoryClear() {
+            memory = 0;
+            func = "";
+
+            const element = document.getElementById('output');
+            element.innerHTML = "0";
+        }
+    </script>
+</html>
